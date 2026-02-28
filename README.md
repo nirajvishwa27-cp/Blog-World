@@ -1,69 +1,198 @@
-🖋️ BlogWorld | Full-Stack Developer Assessment
-A premium, high-performance blogging platform built with a focus on type-safety, minimal aesthetics, and scalable architecture.
+🖋️ BlogWorld
+Full-Stack Developer Assessment
 
-🔗 Live Links
-Frontend (Vercel): https://blog-world-eight.vercel.app
+A premium, high-performance blogging platform built with a strong focus on type safety, clean architecture, editorial aesthetics, and scalability.
 
-Backend (Render): https://blog-world-3.onrender.com/
+🔗 Live Application
 
-🏗️ Architecture Decisions
-The Tech Stack
-Frontend: Next.js 15 (App Router) for React Server Components and optimized rendering.
+Frontend (Vercel)
+https://blog-world-eight.vercel.app
 
-Backend: NestJS providing a structured, modularized TypeScript environment.
+Backend (Render)
+https://blog-world-3.onrender.com/
 
-ORM: Prisma with PostgreSQL for type-safe database interactions.
+🏗️ Architecture Overview
+🧱 Tech Stack
+Frontend
 
-Styling: Tailwind CSS 4 + ShadCN UI using a custom "Studio" design system (Ink & Alabaster palette).
+Next.js 15 (App Router)
 
-Design Philosophy: "Studio Narrative"
-Instead of a standard SaaS dashboard, I implemented an Editorial Aesthetic:
+React Server Components
 
-Typography over Boxes: Minimalist borders with a focus on high-contrast typography and negative space.
+Optimized rendering & routing
 
-UX Thinking: Implemented optimistic UI updates for comments and likes to ensure the platform feels "instant."
+Tailwind CSS 4 + ShadCN UI
+
+Backend
+
+NestJS (Modular, structured TypeScript framework)
+
+JWT-based authentication
+
+Global validation & request handling
+
+Database & ORM
+
+PostgreSQL
+
+Prisma ORM for type-safe database operations
+
+🎨 Design Philosophy — Studio Narrative
+
+Rather than building a traditional SaaS dashboard UI, BlogWorld follows an Editorial Design System.
+
+✨ Typography Over Boxes
+
+Minimal borders
+
+Strong typographic hierarchy
+
+Emphasis on negative space
+
+Clean reading experience
+
+⚡ Instant UX
+
+Optimistic UI updates for:
+
+Comments
+
+Likes
+
+Immediate visual feedback without page reloads
 
 🚀 Advanced Concepts & Features
-🛡️ Secure API & Rate Limiting: Global ValidationPipe and restricted CORS policies. Integrated NestJS Throttler to prevent brute-force attacks on sensitive endpoints.
+🛡️ Security & API Hardening
 
-📝 Structured Logging: Consistent logging strategy to track API requests and database queries for better observability.
+Global ValidationPipe
 
-⚡ Performance Optimization:
+Restricted CORS policies
 
-Image Optimization: Next.js lazy-loading and optimized font delivery.
+Rate limiting using NestJS Throttler
 
-Database Indexing: Indexes on frequently queried fields (slug, userId) for fast lookups at scale.
+Protection against brute-force attempts
 
-📈 Scaling the System
-To support 100k+ users, I would implement:
+Proper status codes & secure error handling
 
-Async Job Processing: Move heavy tasks (emails/notifications) to a Redis-backed BullMQ queue.
+📝 Structured Logging
 
-Edge Caching: Implement Redis caching for popular blog posts to reduce DB load.
+Centralized logging strategy
 
-Read Replicas: Scale PostgreSQL by introducing read replicas for the feed.
+API request tracking
 
-CDN Integration: Offload static assets to a global CDN like AWS S3/CloudFront.
+Database query observability
 
-🛠️ Local Setup
-1. Backend Setup
-Bash
+Production-ready monitoring foundation
+
+⚡ Performance Optimizations
+Frontend
+
+Automatic image optimization
+
+Optimized font delivery
+
+Efficient rendering with Next.js App Router
+
+Database
+
+Indexed fields:
+
+slug
+
+userId
+
+Optimized feed queries
+
+Avoided N+1 query problem
+
+📈 Scaling Strategy (100K+ Users)
+
+To scale BlogWorld for large production workloads, the following would be implemented:
+
+🔄 Async Job Processing
+
+Redis-backed BullMQ
+
+Offload heavy tasks:
+
+Emails
+
+Notifications
+
+Background summaries
+
+⚡ Edge Caching
+
+Redis caching for:
+
+Popular blog posts
+
+Public feed endpoints
+
+🗄️ Read Replicas
+
+PostgreSQL read replicas for feed-heavy traffic
+
+🌍 CDN Integration
+
+Static asset offloading to:
+
+AWS S3
+
+CloudFront
+
+🛠️ Local Development Setup
+1️⃣ Backend Setup
 cd backend
 npm install
-# Configure .env with DATABASE_URL and JWT_SECRET
+
+Create .env file:
+
+DATABASE_URL=your_database_url
+JWT_SECRET=your_jwt_secret
+
+Then run:
+
 npx prisma generate
 npx prisma db push
-npm run build
 npm run start:dev
-2. Frontend Setup
-Bash
+2️⃣ Frontend Setup
 cd frontend
 npm install
-# Add NEXT_PUBLIC_API_URL to .env.local
+
+Create .env.local file:
+
+NEXT_PUBLIC_API_URL=http://localhost:3000
+
+Then run:
+
 npm run dev
 🧪 Technical Tradeoffs
-Auth Strategy: Chose JWT-based client-side auth for rapid development in this assessment. For enterprise production, I would transition to HttpOnly Cookies to mitigate XSS risks.
+🔐 Authentication Strategy
 
-Project Structure: Used a simple folder-based monorepo for deployment ease. For larger teams, I would migrate to Turborepo for better build caching.
+Used JWT-based client-side authentication for faster development during the assessment.
 
-👨‍💻 Developed by Niraj Vishwakarma Full-Stack Developer
+For enterprise production environments:
+
+I would migrate to HttpOnly cookies
+
+Add refresh token rotation
+
+Implement stricter CSRF protection
+
+🏗️ Project Structure
+
+Simple folder-based monorepo for deployment clarity.
+
+For larger teams:
+
+I would migrate to Turborepo
+
+Enable build caching
+
+Improve CI/CD performance
+
+👨‍💻 Author
+
+Niraj Vishwakarma
+Full-Stack Developer

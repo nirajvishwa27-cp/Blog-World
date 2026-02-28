@@ -1,8 +1,7 @@
-'use client';
-
 import Link from 'next/link';
-import { Heart, MessageCircle, ArrowUpRight, Calendar, UserCircle2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Heart, MessageCircle } from 'lucide-react';
 
 interface BlogCardProps {
   id: string;
@@ -16,75 +15,29 @@ interface BlogCardProps {
 
 export default function BlogCard({ title, slug, summary, createdAt, user, _count }: BlogCardProps) {
   return (
-    <Link href={`/blog/${slug}`} className="group block no-underline">
-      <article className={cn(
-        "relative overflow-hidden p-8 transition-all duration-500 ease-out",
-        "bg-card border border-border rounded-[var(--radius)]",
-        "hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5",
-        "active:scale-[0.99] active:duration-150"
-      )}>
-        
-        {/* Subtle Background Accent on Hover */}
-        <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        <div className="relative z-10 flex justify-between items-start gap-6">
-          <div className="flex-1 space-y-4">
-            
-            {/* Author & Date Meta */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary border border-border text-[10px] font-black uppercase tracking-widest text-primary">
-                <UserCircle2 size={12} />
-                {user.email.split('@')[0]}
-              </div>
-              <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter flex items-center gap-1">
-                <Calendar size={12} className="opacity-50" />
-                {new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-              </span>
-            </div>
-
-            {/* Title & Summary */}
-            <div className="space-y-2">
-              <h2 className="font-serif text-2xl md:text-3xl font-black leading-tight tracking-tighter text-foreground group-hover:text-primary transition-colors duration-300">
-                {title}
-              </h2>
-              {summary && (
-                <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed line-clamp-2">
-                  {summary}
-                </p>
-              )}
-            </div>
-
-            {/* Stats Row */}
-            <div className="flex items-center gap-6 pt-2">
-              <div className="flex items-center gap-1.5 group/stat">
-                <Heart 
-                  size={14} 
-                  className="text-muted-foreground group-hover/stat:text-destructive transition-colors duration-300" 
-                />
-                <span className="text-xs font-bold text-muted-foreground group-hover/stat:text-foreground">
-                  {_count.likes}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 group/stat">
-                <MessageCircle 
-                  size={14} 
-                  className="text-muted-foreground group-hover/stat:text-primary transition-colors duration-300" 
-                />
-                <span className="text-xs font-bold text-muted-foreground group-hover/stat:text-foreground">
-                  {_count.comments}
-                </span>
-              </div>
-            </div>
+    <Link href={`/blog/${slug}`}>
+      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+        <CardHeader className="pb-2">
+          <div className="flex items-start justify-between gap-2">
+            <CardTitle className="text-lg leading-tight">{title}</CardTitle>
           </div>
-
-          {/* Action Icon */}
-          <div className="flex-shrink-0">
-            <div className="p-2 rounded-full bg-secondary border border-border group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:rotate-45">
-              <ArrowUpRight size={18} />
-            </div>
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Badge variant="secondary">{user.email.split('@')[0]}</Badge>
+            <span>{new Date(createdAt).toLocaleDateString()}</span>
           </div>
-        </div>
-      </article>
+        </CardHeader>
+        <CardContent>
+          {summary && <p className="text-slate-600 text-sm line-clamp-2 mb-3">{summary}</p>}
+          <div className="flex items-center gap-4 text-slate-500 text-sm">
+            <span className="flex items-center gap-1">
+              <Heart className="w-4 h-4" /> {_count.likes}
+            </span>
+            <span className="flex items-center gap-1">
+              <MessageCircle className="w-4 h-4" /> {_count.comments}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
     </Link>
   );
 }

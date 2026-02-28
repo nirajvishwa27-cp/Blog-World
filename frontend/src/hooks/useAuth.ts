@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { getToken, getEmail, logout as logoutFn, isLoggedIn } from '@/lib/auth';
+import { getToken, getEmail, logout as logoutFn } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 
 export function useAuth() {

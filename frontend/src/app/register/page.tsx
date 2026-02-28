@@ -1,86 +1,142 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { register } from '@/lib/api';
 import { setToken, setEmail } from '@/lib/auth';
-import { Loader2 } from 'lucide-react';
 
 export default function RegisterPage() {
-  const [email, setEmailState] = useState('');
+  const [email, setEmailVal] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); setError('');
+    setLoading(true);
+    setError('');
     try {
       const res = await register(email, password);
       setToken(res.data.access_token);
       setEmail(res.data.email);
-      router.push('/dashboard');
-    } catch { setError('Email already in use or invalid'); }
-    finally { setLoading(false); }
+      await new Promise(resolve => setTimeout(resolve, 50));
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Email already in use or invalid';
+      setError(Array.isArray(msg) ? msg.join(', ') : msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: '420px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <p style={{ color: 'var(--accent)', fontSize: '12px', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '12px' }}>Join BlogWorld</p>
-          <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '36px', fontWeight: 700 }}>Create account</h1>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+
+        {/* Logo */}
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '14px',
+          background: 'linear-gradient(135deg, var(--primary), #a855f7)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '24px',
+          boxShadow: '0 4px 16px rgba(112,51,255,0.3)',
+        }}>
+          <span style={{ color: 'white', fontSize: '22px', fontFamily: 'var(--font-serif)', fontWeight: 700 }}>B</span>
         </div>
 
+        <h1 style={{
+          fontFamily: 'var(--font-serif)',
+          fontSize: '32px', fontWeight: 700,
+          letterSpacing: '-0.03em', marginBottom: '6px',
+          color: 'var(--foreground)',
+        }}>
+          Join BlogWorld
+        </h1>
+        <p style={{ color: 'var(--muted-foreground)', fontSize: '14px', marginBottom: '32px' }}>
+          Start sharing your stories today
+        </p>
+
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
           <div>
-            <label style={{ display: 'block', fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', letterSpacing: '1px', textTransform: 'uppercase' }}>Email</label>
-            <input type="email" value={email} onChange={e => setEmailState(e.target.value)} required
-              style={inputStyle} placeholder="you@example.com"
-              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', color: 'var(--muted)', marginBottom: '8px', letterSpacing: '1px', textTransform: 'uppercase' }}>Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
-              style={inputStyle} placeholder="Min 6 characters"
-              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+            <label style={lbl}>Email address</label>
+            <input
+              type="email" value={email} required
+              onChange={e => setEmailVal(e.target.value)}
+              placeholder="you@example.com"
+              style={inp}
+              onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(112,51,255,0.1)'; }}
+              onBlur={e =>  { e.target.style.borderColor = 'var(--border)';  e.target.style.boxShadow = 'none'; }}
             />
           </div>
 
-          {error && <p style={{ color: 'var(--danger)', fontSize: '13px' }}>{error}</p>}
+          <div>
+            <label style={lbl}>Password</label>
+            <input
+              type="password" value={password} required minLength={6}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Min 6 characters"
+              style={inp}
+              onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(112,51,255,0.1)'; }}
+              onBlur={e =>  { e.target.style.borderColor = 'var(--border)';  e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
 
-          <button type="submit" disabled={loading} style={btnStyle}>
-            {loading ? <Loader2 size={16} className="animate-spin" /> : 'Create Account'}
+          {error && (
+            <div style={{
+              padding: '10px 14px', borderRadius: '8px',
+              background: 'rgba(229,75,79,0.08)',
+              border: '1px solid rgba(229,75,79,0.3)',
+              fontSize: '13px', color: 'var(--destructive)',
+            }}>
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit" disabled={loading}
+            style={{
+              padding: '12px', borderRadius: '10px',
+              background: 'var(--primary)', color: 'white',
+              border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '14px', fontWeight: 600,
+              fontFamily: 'var(--font-sans)',
+              letterSpacing: '-0.01em',
+              boxShadow: '0 4px 12px rgba(112,51,255,0.25)',
+              opacity: loading ? 0.7 : 1,
+              transition: 'opacity 0.15s',
+              marginTop: '4px',
+            }}
+          >
+            {loading ? 'Creating account...' : 'Create account →'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--muted)' }}>
+        <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '13px', color: 'var(--muted-foreground)' }}>
           Already have an account?{' '}
-          <Link href="/login" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Sign in</Link>
+          <Link href="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
   );
 }
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '12px 16px',
-  background: 'var(--surface)', border: '1px solid var(--border)',
-  borderRadius: '6px', color: 'var(--text)', fontSize: '14px',
-  outline: 'none', transition: 'border-color 0.2s',
-  fontFamily: 'DM Sans, sans-serif',
+const lbl: React.CSSProperties = {
+  display: 'block', fontSize: '12px', fontWeight: 600,
+  color: 'var(--muted-foreground)', marginBottom: '8px',
+  letterSpacing: '0.02em', textTransform: 'uppercase',
+  fontFamily: 'var(--font-mono)',
 };
 
-const btnStyle: React.CSSProperties = {
-  width: '100%', padding: '13px',
-  background: 'var(--accent)', color: 'var(--bg)',
-  border: 'none', borderRadius: '6px', cursor: 'pointer',
-  fontSize: '14px', fontWeight: 500, marginTop: '8px',
-  transition: 'opacity 0.2s', display: 'flex',
-  alignItems: 'center', justifyContent: 'center', gap: '8px',
-  fontFamily: 'DM Sans, sans-serif',
+const inp: React.CSSProperties = {
+  width: '100%', padding: '11px 14px',
+  background: 'var(--card)',
+  border: '1px solid var(--border)',
+  borderRadius: '10px',
+  color: 'var(--foreground)',
+  fontSize: '14px', outline: 'none',
+  fontFamily: 'var(--font-sans)',
+  letterSpacing: 'var(--tracking-normal)',
+  transition: 'border-color 0.15s, box-shadow 0.15s',
 };

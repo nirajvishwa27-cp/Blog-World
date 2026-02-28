@@ -1,51 +1,47 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const BASE = 'http://localhost:4000';
 
-export const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
-});
+function headers() {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
 
-// Auto-attach token to every request
-api.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Auth
 export const register = (email: string, password: string) =>
-  api.post('/auth/register', { email, password });
+  axios.post(`${BASE}/auth/register`, { email, password }, { headers: headers() });
 
 export const login = (email: string, password: string) =>
-  api.post('/auth/login', { email, password });
+  axios.post(`${BASE}/auth/login`, { email, password }, { headers: headers() });
 
-// Blogs
-export const getMyBlogs = () => api.get('/blogs/my');
+export const getMyBlogs = () =>
+  axios.get(`${BASE}/blogs/my`, { headers: headers() });
 
 export const createBlog = (data: { title: string; content: string; isPublished: boolean }) =>
-  api.post('/blogs', data);
+  axios.post(`${BASE}/blogs`, data, { headers: headers() });
 
-export const updateBlog = (id: string, data: Partial<{ title: string; content: string; isPublished: boolean }>) =>
-  api.patch(`/blogs/${id}`, data);
+export const updateBlog = (id: string, data: object) =>
+  axios.patch(`${BASE}/blogs/${id}`, data, { headers: headers() });
 
-export const deleteBlog = (id: string) => api.delete(`/blogs/${id}`);
+export const deleteBlog = (id: string) =>
+  axios.delete(`${BASE}/blogs/${id}`, { headers: headers() });
 
-// Public
 export const getFeed = (page = 1, limit = 10) =>
-  api.get(`/public/feed?page=${page}&limit=${limit}`);
+  axios.get(`${BASE}/public/feed?page=${page}&limit=${limit}`);
 
 export const getBlogBySlug = (slug: string) =>
-  api.get(`/public/blogs/${slug}`);
+  axios.get(`${BASE}/public/blogs/${slug}`);
 
-// Likes
-export const likeBlog = (id: string) => api.post(`/blogs/${id}/like`);
-export const unlikeBlog = (id: string) => api.delete(`/blogs/${id}/like`);
+export const likeBlog = (id: string) =>
+  axios.post(`${BASE}/blogs/${id}/like`, {}, { headers: headers() });
 
-// Comments
-export const getComments = (id: string) => api.get(`/blogs/${id}/comments`);
+export const unlikeBlog = (id: string) =>
+  axios.delete(`${BASE}/blogs/${id}/like`, { headers: headers() });
+
+export const getComments = (id: string) =>
+  axios.get(`${BASE}/blogs/${id}/comments`, { headers: headers() });
+
 export const addComment = (id: string, content: string) =>
-  api.post(`/blogs/${id}/comments`, { content });
+  axios.post(`${BASE}/blogs/${id}/comments`, { content }, { headers: headers() });

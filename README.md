@@ -88,6 +88,7 @@ Create `.env` file:
 
 ```bash
 DATABASE_URL=your_database_url
+```
 
 ## 🔧 Run the Backend
 
@@ -99,7 +100,7 @@ npx prisma db push
 npm run start:dev
 ```
 
-## 📱 Run the Mobile App
+## 📱 Frontend
 
 ```bash
 cd frontend

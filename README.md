@@ -88,4 +88,21 @@ Create `.env` file:
 
 ```bash
 DATABASE_URL=your_database_url
-JWT_SECRET=your_jwt_secret
+
+## 🔧 Run the Backend
+
+```bash
+cd backend
+npm install
+npx prisma generate
+npx prisma db push
+npm run start:dev
+```
+
+## 📱 Run the Mobile App
+
+```bash
+cd frontend
+npm install
+npm run dev
+```

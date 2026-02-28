@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE = 'http://localhost:4000';
+const BASE = 'https://blog-world-3.onrender.com';
 
 function headers() {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
